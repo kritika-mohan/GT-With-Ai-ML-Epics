@@ -51,7 +51,7 @@ if os.environ.get("RENDER_EXTERNAL_URL") or os.environ.get("APP_URL"):
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="EnergyAI — Sustainable Energy Optimization",
-    page_icon="⚡",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -340,7 +340,7 @@ df_bench = load_benchmarks()
 # -----------------------------------------------------------------------------
 st.markdown("""
 <div class="hero-container">
-    <div class="badge-pill">⚡ AI-ML & Game-Theoretic Framework</div>
+    <div class="badge-pill">AI-ML & Game-Theoretic Framework</div>
     <h1 class="hero-headline">Predict Faster. Optimize Cleaner.</h1>
     <p class="hero-subheadline">
         An AI-powered energy intelligence system that forecasts grid electricity demand, tracks solar & wind availability, and uses Stackelberg Game Theory to lower electricity costs and carbon emissions.
@@ -395,18 +395,18 @@ st.markdown("<br>", unsafe_allow_html=True)
 # TABBED NAVIGATION (Clean and simple)
 # -----------------------------------------------------------------------------
 tab_pred, tab_charts, tab_bench, tab_game, tab_faq = st.tabs([
-    "⚡ 1. Live Calculator (Test Model)",
-    "📈 2. Visual Solar & Demand Charts",
-    "🏆 3. Model Accuracy & Benchmark",
-    "🎮 4. Game Theory Simulator",
-    "❓ 5. Simple Explanations & FAQ"
+    "1. Live Calculator (Test Model)",
+    "2. Visual Solar & Demand Charts",
+    "3. Model Accuracy & Benchmark",
+    "4. Game Theory Simulator",
+    "5. Explanations & FAQ"
 ])
 
 # =============================================================================
 # TAB 1: LIVE ML PREDICTION ENGINE (Simple, Beginner-Friendly Inputs)
 # =============================================================================
 with tab_pred:
-    st.markdown("### ⚡ Live Electricity Demand Predictor")
+    st.markdown("### Live Electricity Demand Predictor")
     st.markdown("Select a time of day and season. The trained **XGBoost AI Model** will instantly predict how much electricity the country will consume and what the optimal electricity price tier should be.")
 
     col_in_a, col_in_b = st.columns([1, 1], gap="medium")
@@ -414,7 +414,7 @@ with tab_pred:
     with col_in_a:
         st.markdown("""
         <div class="glass-card">
-            <div class="card-icon-halo">🕐</div>
+            <div class="card-icon-halo">01</div>
             <div class="card-title">1. Time & Season Settings</div>
             <div class="card-desc">Choose the hour of the day and month you want to forecast.</div>
         </div>
@@ -439,7 +439,7 @@ with tab_pred:
     with col_in_b:
         st.markdown("""
         <div class="glass-card">
-            <div class="card-icon-halo">⚡</div>
+            <div class="card-icon-halo">02</div>
             <div class="card-title">2. Recent Grid Conditions</div>
             <div class="card-desc">Power usage follows strong habits. Adjust previous hour demand.</div>
         </div>
@@ -455,7 +455,7 @@ with tab_pred:
         sim_wind_mw = sim_wind_gw * 1000.0
 
     st.markdown("<br>", unsafe_allow_html=True)
-    predict_clicked = st.button("🚀 Calculate AI Prediction Now", use_container_width=True)
+    predict_clicked = st.button("Calculate Prediction Now", use_container_width=True)
 
     if predict_clicked or True:  # Default display on load
         if model is not None and metadata is not None:
@@ -504,16 +504,16 @@ with tab_pred:
 
             # Time of use tier
             if (7 <= sim_hour <= 10) or (18 <= sim_hour <= 22):
-                tier_badge = "🔴 PEAK HOURS (Higher Price to Save Grid)"
+                tier_badge = "PEAK HOURS (High Demand Period)"
                 price_rec = "₹7.50 / kWh"
             elif 11 <= sim_hour <= 16:
-                tier_badge = "🟡 SOLAR VALLEY (Cheapest Clean Power)"
+                tier_badge = "SOLAR VALLEY (High Renewable Window)"
                 price_rec = "₹3.80 / kWh"
             else:
-                tier_badge = "🟢 OFF-PEAK (Overnight Standard)"
+                tier_badge = "OFF-PEAK (Overnight Baseline)"
                 price_rec = "₹4.50 / kWh"
 
-            st.markdown("#### 🎯 AI Forecast Results")
+            st.markdown("#### Forecast Results")
             out_c1, out_c2, out_c3, out_c4 = st.columns(4)
 
             with out_c1:
@@ -588,7 +588,7 @@ with tab_pred:
 # TAB 2: VISUAL SOLAR & DEMAND CHARTS (The Duck Curve Explained)
 # =============================================================================
 with tab_charts:
-    st.markdown("### 📈 Real Power Grid Trends & The Famous 'Duck Curve'")
+    st.markdown("### Real Power Grid Trends and the Duck Curve Phenomenon")
     st.markdown("Explore the genuine Grid-India data. Notice how massive solar generation at 12:00 PM creates the **Duck Curve** (a deep valley in net demand).")
 
     if df_forecast is not None:
@@ -631,10 +631,10 @@ with tab_charts:
         )
         st.plotly_chart(fig_duck, use_container_width=True)
 
-        st.info("💡 **What is happening in this chart?** Total electricity demand (blue line) stays relatively steady between 180 and 210 GW. But around 12:00 PM, **solar generation surges** (yellow bars). As a result, the net load that conventional plants must produce plummets into a deep valley (orange line), creating the belly of the 'duck'.")
+        st.info("**Chart Interpretation:** Total electricity demand (blue line) stays relatively steady between 180 and 210 GW. But around 12:00 PM, **solar generation surges** (yellow bars). As a result, the net load that conventional plants must produce plummets into a deep valley (orange line), creating the belly of the 'duck'.")
 
         # Actual vs Predicted over 1 week
-        st.markdown("#### 🔍 AI Predictions Tracking Actual Demand (1-Week Inspection)")
+        st.markdown("#### Model Predictions vs. Actual Demand (1-Week Inspection)")
         one_week = df_forecast.head(168)
         fig_trace = go.Figure()
         fig_trace.add_trace(go.Scatter(
@@ -670,7 +670,7 @@ with tab_charts:
 # TAB 3: MODEL ACCURACY & BENCHMARKS (Plain and Justified)
 # =============================================================================
 with tab_bench:
-    st.markdown("### 🏆 Scientific Benchmark: Which Model Works Best?")
+    st.markdown("### Quantitative Benchmark: Comparative Model Evaluation")
     st.markdown("We trained 5 different algorithms chronologically on **10,252 hours** and tested them on **2,564 unseen hours**. Gradient Boosting algorithms beat all traditional baselines.")
 
     if df_bench is not None:
@@ -708,7 +708,7 @@ with tab_bench:
             )
             st.plotly_chart(fig_r2, use_container_width=True)
 
-        st.markdown("##### 📋 Exact Performance Metrics Table")
+        st.markdown("##### Performance Metrics Summary")
         st.dataframe(df_bench.style.format({
             'MAE (MW)': '{:,.1f}',
             'RMSE (MW)': '{:,.1f}',
@@ -718,7 +718,7 @@ with tab_bench:
 
         st.markdown("""
         <div class="faq-item">
-            <div class="faq-q">🤔 Why does 1.06% MAPE matter in real life?</div>
+            <div class="faq-q">Operational Significance of 1.06% MAPE</div>
             <div class="faq-a">
                 India's electricity grid operates at ~200,000 MW. A 1% error means our prediction is only off by ~2,000 MW. This is close enough for power plant operators to reserve the exact right amount of backup power, preventing blackouts and avoiding millions of dollars in wasted coal/gas fuel.
             </div>
@@ -729,7 +729,7 @@ with tab_bench:
 # TAB 4: STACKELBERG GAME THEORY SIMULATOR
 # =============================================================================
 with tab_game:
-    st.markdown("### 🎮 Stackelberg Leader-Follower Pricing Game")
+    st.markdown("### Stackelberg Leader-Follower Pricing Optimization")
     st.markdown("""
     In our research paper, the **Electricity Utility is the Leader** and **Consumers are Followers**:
     - When electricity is scarce (evening peak), the Leader sets higher prices to discourage heavy usage.
@@ -742,7 +742,7 @@ with tab_game:
     with col_g1:
         st.markdown("""
         <div class="glass-card">
-            <div class="card-icon-halo">⚙️</div>
+            <div class="card-icon-halo">03</div>
             <div class="card-title">Adjust Pricing Strategy</div>
             <div class="card-desc">Simulate different electricity tariff rates:</div>
         </div>
@@ -769,7 +769,7 @@ with tab_game:
             peak_shaved_gw = sim_48h['baseline_demand_gw'].max() - sim_48h['shifted_demand_gw'].max()
             co2_saved_tons = peak_shaved_gw * 1000 * 0.85 * 24 / 1000  # Estimate
 
-            st.markdown("#### 🎯 Game Equilibrium Results")
+            st.markdown("#### Game Equilibrium Results")
             eq_a, eq_b, eq_c = st.columns(3)
             with eq_a:
                 st.markdown(f"""
@@ -830,19 +830,19 @@ with tab_game:
 # TAB 5: SIMPLE EXPLANATIONS & FAQ (Velocity style clean FAQ)
 # =============================================================================
 with tab_faq:
-    st.markdown("### ❓ Simple Explanations & FAQ")
+    st.markdown("### Framework Explanations & FAQ")
     st.markdown("Plain-language answers to explain this university research project to professors, examiners, or viva questions.")
 
     st.markdown("""
     <div class="faq-item">
-        <div class="faq-q">⚡ 1. What is Electricity Demand Forecasting?</div>
+        <div class="faq-q">1. What is Electricity Demand Forecasting?</div>
         <div class="faq-a">
             Electricity travels across power lines at the speed of light and cannot easily be stored. Power plants must produce the exact amount of power people need every second. Demand forecasting uses historical trends to predict tomorrow's power usage in advance, preventing blackouts and avoiding over-generation.
         </div>
     </div>
 
     <div class="faq-item">
-        <div class="faq-q">☀️ 2. What is Net Load and the 'Duck Curve'?</div>
+        <div class="faq-q">2. What is Net Load and the 'Duck Curve'?</div>
         <div class="faq-a">
             <strong>Net Load = Total Demand − Solar Generation − Wind Generation.</strong><br>
             When everyone is at work around noon, solar panels generate massive amounts of clean power. This reduces the amount of power that coal or gas power plants need to generate, causing a deep dip in demand. When the sun sets at 6 PM, solar output drops to zero while people turn on lights and ACs at home, causing a steep ramp up in net load.
@@ -850,14 +850,14 @@ with tab_faq:
     </div>
 
     <div class="faq-item">
-        <div class="faq-q">🤖 3. How does the Machine Learning model work?</div>
+        <div class="faq-q">3. How does the Machine Learning model work?</div>
         <div class="faq-a">
             We use <strong>XGBoost (Extreme Gradient Boosting)</strong>. It builds hundreds of decision trees sequentially, where each tree learns from the mistakes of the previous one. The model looks at 25 features including what hour it is, the day of the week, the month, what the demand was yesterday at the same hour, and the 24-hour moving average.
         </div>
     </div>
 
     <div class="faq-item">
-        <div class="faq-q">🎯 4. What is the Stackelberg Leader-Follower Game?</div>
+        <div class="faq-q">4. What is the Stackelberg Leader-Follower Game?</div>
         <div class="faq-a">
             It is a game-theoretic economic model with two players:<br>
             • <strong>Leader (The Power Company):</strong> Chooses electricity prices across the day to minimize generation costs and stabilize the grid.<br>
@@ -867,7 +867,7 @@ with tab_faq:
     </div>
 
     <div class="faq-item">
-        <div class="faq-q">📁 5. Where did the dataset come from?</div>
+        <div class="faq-q">5. Data Provenance and Open Access Information</div>
         <div class="faq-a">
             The data is from <strong>Grid-India (Power System Operation Corporation Limited)</strong>, published openly on Mendeley Data. It contains real hourly electricity demand, solar generation, and wind generation across India from January 2024 to June 2025.
         </div>

@@ -9,7 +9,7 @@
 
 ---
 
-## 📌 Executive Summary
+## Executive Summary
 
 This research project develops an end-to-end Machine Learning and Game-Theoretic framework to forecast national electricity demand and renewable energy generation, optimize Time-of-Use ($ToU$) pricing, and incentivize community demand response.
 
@@ -20,7 +20,7 @@ This research project develops an end-to-end Machine Learning and Game-Theoretic
 
 ---
 
-## 📂 Project Architecture
+## Project Architecture
 
 ```
 GT-With-Ai-ML-Epics/
@@ -63,15 +63,15 @@ GT-With-Ai-ML-Epics/
 
 ---
 
-## 🏆 Model Performance Benchmark
+## Model Performance Benchmark
 
 Models were trained on the earliest **10,252 hours** (80%) and evaluated on the subsequent **2,564 hours** (20%) of unseen future grid data:
 
 | Rank | Model Architecture | MAE (MW) | RMSE (MW) | MAPE (%) | $R^2$ Score | Operational Note |
 |:---:|:---|:---:|:---:|:---:|:---:|:---|
-| 🥇 | **LightGBM Regressor** | **2,090.20** | **3,444.22** | **1.061%** | **0.9382** | Fastest training convergence |
-| 🥈 | **XGBoost Regressor** | **2,105.77** | **3,444.06** | **1.068%** | **0.9382** | Selected champion for deployment |
-| 🥉 | **Random Forest Regressor** | 2,414.98 | 3,771.32 | 1.220% | 0.9258 | Robust non-linear ensemble |
+| 1 | **LightGBM Regressor** | **2,090.20** | **3,444.22** | **1.061%** | **0.9382** | Fastest training convergence |
+| 2 | **XGBoost Regressor** | **2,105.77** | **3,444.06** | **1.068%** | **0.9382** | Selected champion for deployment |
+| 3 | **Random Forest Regressor** | 2,414.98 | 3,771.32 | 1.220% | 0.9258 | Robust non-linear ensemble |
 | 4 | **Linear Regression (Standardized)**| 2,927.77 | 4,556.19 | 1.478% | 0.8918 | Captures rolling mean trend |
 | 5 | **Naive Persistence Baseline** | 3,738.41 | 5,370.46 | 1.866% | 0.8496 | Benchmark reference ($y_t = y_{t-1}$) |
 
@@ -79,7 +79,7 @@ Models were trained on the earliest **10,252 hours** (80%) and evaluated on the 
 
 ---
 
-## 🚀 Quickstart Guide
+## Quickstart Guide
 
 ### 1. Clone the Repository
 ```bash
@@ -109,7 +109,7 @@ python notebooks/run_notebook.py
 
 ---
 
-## ☁️ Deploying to Render (Render.com)
+## Deploying to Render (Render.com)
 
 This repository is pre-configured for **1-click / zero-config deployment on Render** as a Free Web Service.
 
@@ -139,18 +139,18 @@ This repository is pre-configured for **1-click / zero-config deployment on Rend
 
 ---
 
-## 🎮 Dashboard Capabilities
+## Dashboard Capabilities
 
 The interactive Streamlit dashboard (`dashboard/app.py`) provides four analytical modules:
 
-1. **⚡ Live Model Inference Engine:** Interactively adjust time of day, season, and past demand lags to trigger real-time predictions from `models/best_model.pkl`.
-2. **📈 Forecasting & Dispatch Explorer:** Explore the actual vs. predicted timeline, 95% uncertainty confidence bands, and the Duck Curve phenomenon.
-3. **🏆 Model Benchmark & Explainability:** Side-by-side metric comparisons and feature importance rankings.
-4. **🎮 Stackelberg Game Theory Simulator:** Adjust peak, off-peak, and solar valley electricity tariffs along with consumer price elasticity ($\epsilon$) to visualize how price signals shave peak grid demand and abate carbon emissions.
+1. **Live Model Inference Engine:** Interactively adjust time of day, season, and past demand lags to trigger real-time predictions from `models/best_model.pkl`.
+2. **Forecasting & Dispatch Explorer:** Explore the actual vs. predicted timeline, 95% uncertainty confidence bands, and the Duck Curve phenomenon.
+3. **Model Benchmark & Explainability:** Side-by-side metric comparisons and feature importance rankings.
+4. **Stackelberg Game Theory Simulator:** Adjust peak, off-peak, and solar valley electricity tariffs along with consumer price elasticity ($\epsilon$) to visualize how price signals shave peak grid demand and abate carbon emissions.
 
 ---
 
-## 📚 Academic Citation & Acknowledgments
+## Academic Citation & Acknowledgments
 
 - **Dataset:** Grid-India (2024). *Electricity Demand, Solar and Wind Generation Data of India at Hourly Interval*. Mendeley Data, V2. [https://doi.org/10.17632/y58jknpgs8.2](https://doi.org/10.17632/y58jknpgs8.2)
 - **Meteorological Data:** NASA Langley Research Center POWER Project. [https://power.larc.nasa.gov/](https://power.larc.nasa.gov/)
