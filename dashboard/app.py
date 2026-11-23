@@ -6,6 +6,8 @@ Clean, intuitive, and beginner-friendly interface.
 
 import os
 import json
+import threading
+import time
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -13,6 +15,36 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 import joblib
+import requests
+
+# -----------------------------------------------------------------------------
+# RENDER FREE TIER KEEP-AWAKE DAEMON
+# Render spins down free web services after 15 mins of inactivity.
+# This daemon thread sends a lightweight health ping every 12 mins to stay awake.
+# -----------------------------------------------------------------------------
+def _render_keep_alive():
+    target_url = os.environ.get("RENDER_EXTERNAL_URL") or os.environ.get("APP_URL")
+    if not target_url:
+        return
+    if not target_url.startswith("http"):
+        target_url = f"https://{target_url}"
+    # Streamlit built-in lightweight health check endpoint
+    ping_endpoint = f"{target_url.rstrip('/')}/_stcore/health"
+    
+    # Initial delay after boot
+    time.sleep(120)
+    while True:
+        try:
+            # 12-minute ping interval (720 seconds < 900-second Render sleep threshold)
+            time.sleep(720)
+            requests.get(ping_endpoint, timeout=15)
+        except Exception:
+            pass
+
+if os.environ.get("RENDER_EXTERNAL_URL") or os.environ.get("APP_URL"):
+    if not any(t.name == "RenderKeepAwakeThread" for t in threading.enumerate()):
+        keep_alive_thread = threading.Thread(target=_render_keep_alive, name="RenderKeepAwakeThread", daemon=True)
+        keep_alive_thread.start()
 
 # -----------------------------------------------------------------------------
 # PAGE CONFIGURATION
