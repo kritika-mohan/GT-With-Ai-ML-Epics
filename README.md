@@ -1,119 +1,127 @@
 # AI-ML Assisted Game-Theoretic Framework for Sustainable Energy Optimization
 
-## Project Overview
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Streamlit App](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B.svg)](dashboard/app.py)
 
-This university research project combines **Machine Learning (ML) forecasting** with **Game Theory (Stackelberg Leader-Follower framework)** to optimize electricity pricing, consumption, energy allocation, and sustainability using real Indian energy grid data.
-
-**Dataset:** Electricity Demand, Solar and Wind Generation Data of India at Hourly Interval  
-**Source:** [Mendeley Data – y58jknpgs8/2](https://data.mendeley.com/datasets/y58jknpgs8/2)  
-**Weather Data:** [NASA POWER API](https://power.larc.nasa.gov/)
+**University Group Research Project**  
+*A Community Case Study Using Government Open Energy Data*
 
 ---
 
-## Project Structure
+## 📌 Executive Summary
+
+This research project develops an end-to-end Machine Learning and Game-Theoretic framework to forecast national electricity demand and renewable energy generation, optimize Time-of-Use ($ToU$) pricing, and incentivize community demand response.
+
+- **Open Data Source:** Grid-India hourly electricity demand, solar, and wind generation (January 2024 – June 2025; 12,984 hourly telemetry records).
+- **Core ML Architecture:** Gradient Boosted Decision Trees (**XGBoost** and **LightGBM**) evaluated against Random Forest, Linear Regression, and Naive Persistence baselines under strict chronological partitioning (80% train / 20% test).
+- **Game-Theoretic Formulation:** Outputs feed into a **Stackelberg Leader-Follower Game** where the electricity provider (Leader) sets dynamic pricing signals and consumers (Followers) shift flexible demand to absorb solar peaks and minimize net load burden.
+- **Interactive Dashboard:** Full Streamlit web application with real-time inference, Duck Curve visualization, model explainability, and game simulation.
+
+---
+
+## 📂 Project Architecture
 
 ```
-AI_Energy_Optimization/
+GT-With-Ai-ML-Epics/
+│
+├── dashboard/
+│   └── app.py                                         # Interactive Streamlit Web Dashboard
 │
 ├── data/
-│   ├── raw/                   ← Place downloaded Excel file here
-│   ├── processed/             ← Cleaned datasets (auto-generated)
-│   └── weather/               ← NASA POWER weather data (auto-fetched)
+│   ├── raw/                                           # Grid-India Excel Workbooks
+│   │   └── January 2024 - June 2025.xlsx              # Consolidated hourly dataset (12,984 rows)
+│   ├── processed/
+│   │   ├── energy_data_cleaned.csv                    # Cleaned time-series with Net Load
+│   │   └── energy_data_full_features.csv              # 27 engineered lag/cyclical/rolling features
+│   └── weather/                                       # NASA POWER weather telemetry
+│
+├── models/
+│   ├── best_model.pkl                                 # Trained champion XGBoost Regressor (1.8 MB)
+│   └── model_metadata.json                            # Model features, metrics, training parameters
 │
 ├── notebooks/
-│   ├── 01_Energy_Data_Analysis_and_ML_Forecasting.ipynb   ← Main ML Notebook
-│   └── 02_Stackelberg_Game_Theory_Optimization.ipynb      ← Game Theory Notebook (Phase 2)
+│   ├── 01_Energy_Data_Analysis_and_ML_Forecasting.ipynb # Executed Jupyter Notebook (with all outputs & plots)
+│   ├── build_notebook.py                              # Notebook generator script
+│   └── run_notebook.py                                # Automated headless notebook execution runner
 │
-├── models/                    ← Saved trained ML models
 ├── results/
-│   └── plots/                 ← All EDA and forecast visualizations
-├── dashboard/                 ← (Future) Interactive dashboard
+│   ├── model_comparison.csv                           # Final benchmark comparison across all models
+│   ├── ml_forecast_for_game_theory.csv                # Interface feed for Stackelberg Game Theory
+│   ├── ml_forecast_sample_1week.csv                   # 168-hour sample for quick inspection
+│   └── plots/
+│       ├── 01_time_series_overview.png                # Full 18-month time series trend
+│       ├── 02_hourly_patterns.png                     # Diurnal demand and renewable profiles
+│       ├── 05_correlation_heatmap.png                 # Pearson correlation matrix
+│       ├── 13_model_comparison.png                    # Benchmark comparison bar charts
+│       ├── 14_best_model_full_analysis.png            # Actual vs. predicted and residual error curves
+│       ├── 15_feature_importance.png                  # Top predictive feature rankings
+│       └── 16_game_theory_interface.png               # Probabilistic dispatch signals for Game Theory
 │
-└── README.md                  ← This file
+└── README.md                                          # This documentation
 ```
 
 ---
 
-## How to Run the Project
+## 🏆 Model Performance Benchmark
 
-### Step 1: Download the Dataset
+Models were trained on the earliest **10,252 hours** (80%) and evaluated on the subsequent **2,564 hours** (20%) of unseen future grid data:
 
-1. Go to: https://data.mendeley.com/datasets/y58jknpgs8/2
-2. Download the Excel file (expected name: `January 2024 - June 2025.xlsx`)
-3. Place the file inside: `AI_Energy_Optimization/data/raw/`
+| Rank | Model Architecture | MAE (MW) | RMSE (MW) | MAPE (%) | $R^2$ Score | Operational Note |
+|:---:|:---|:---:|:---:|:---:|:---:|:---|
+| 🥇 | **LightGBM Regressor** | **2,090.20** | **3,444.22** | **1.061%** | **0.9382** | Fastest training convergence |
+| 🥈 | **XGBoost Regressor** | **2,105.77** | **3,444.06** | **1.068%** | **0.9382** | Selected champion for deployment |
+| 🥉 | **Random Forest Regressor** | 2,414.98 | 3,771.32 | 1.220% | 0.9258 | Robust non-linear ensemble |
+| 4 | **Linear Regression (Standardized)**| 2,927.77 | 4,556.19 | 1.478% | 0.8918 | Captures rolling mean trend |
+| 5 | **Naive Persistence Baseline** | 3,738.41 | 5,370.46 | 1.866% | 0.8496 | Benchmark reference ($y_t = y_{t-1}$) |
 
-### Step 2: Install Required Python Libraries
+> **Key Takeaway:** Both gradient boosted models achieve exceptional precision on the national grid with **~1.06% MAPE** (average deviation of ~2,000 MW on a 200,000 MW grid) and explain over **93.8% of variance**.
 
-Open a terminal/command prompt and run:
+---
 
+## 🚀 Quickstart Guide
+
+### 1. Clone the Repository
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn xgboost lightgbm requests joblib openpyxl
+git clone https://github.com/kritika-mohan/GT-With-Ai-ML-Epics.git
+cd GT-With-Ai-ML-Epics
 ```
 
-### Step 3: Open Jupyter Notebook
-
+### 2. Install Dependencies
 ```bash
-cd AI_Energy_Optimization
+pip install pandas numpy matplotlib seaborn scikit-learn xgboost lightgbm joblib openpyxl streamlit plotly nbformat nbclient
+```
+
+### 3. Launch the Interactive Dashboard
+To interact with the live model, test real-time inference, and run the game-theoretic simulator:
+```bash
+streamlit run dashboard/app.py
+```
+
+### 4. Run or Inspect the Jupyter Notebook
+Open the fully executed notebook directly in Jupyter, VS Code, or GitHub:
+```bash
 jupyter notebook notebooks/01_Energy_Data_Analysis_and_ML_Forecasting.ipynb
 ```
-
-### Step 4: Run All Cells
-
-In Jupyter Notebook, go to: **Kernel → Restart & Run All**
-
-The notebook will:
-- Load and inspect the dataset
-- Clean and explore the data
-- Engineer features
-- Train multiple ML models
-- Compare model performance
-- Generate forecasts
-- Export results for Game Theory integration
+Or execute headlessly from the terminal:
+```bash
+python notebooks/run_notebook.py
+```
 
 ---
 
-## Python Version & Library Requirements
+## 🎮 Dashboard Capabilities
 
-| Library       | Version (Tested) | Purpose                        |
-|---------------|-----------------|--------------------------------|
-| Python        | 3.8+            | Core language                  |
-| pandas        | 2.x             | Data manipulation              |
-| numpy         | 1.x / 2.x       | Numerical computation          |
-| matplotlib    | 3.x             | Visualizations                 |
-| seaborn       | 0.13.x          | Statistical visualizations     |
-| scikit-learn  | 1.x             | ML models & metrics            |
-| xgboost       | 2.x             | Gradient boosted trees         |
-| lightgbm      | 4.x             | Light gradient boosting        |
-| requests      | 2.x             | NASA POWER API calls           |
-| joblib        | 1.x             | Model saving/loading           |
-| openpyxl      | 3.x             | Excel file reading             |
+The interactive Streamlit dashboard (`dashboard/app.py`) provides four analytical modules:
+
+1. **⚡ Live Model Inference Engine:** Interactively adjust time of day, season, and past demand lags to trigger real-time predictions from `models/best_model.pkl`.
+2. **📈 Forecasting & Dispatch Explorer:** Explore the actual vs. predicted timeline, 95% uncertainty confidence bands, and the Duck Curve phenomenon.
+3. **🏆 Model Benchmark & Explainability:** Side-by-side metric comparisons and feature importance rankings.
+4. **🎮 Stackelberg Game Theory Simulator:** Adjust peak, off-peak, and solar valley electricity tariffs along with consumer price elasticity ($\epsilon$) to visualize how price signals shave peak grid demand and abate carbon emissions.
 
 ---
 
-## Key Outputs
+## 📚 Academic Citation & Acknowledgments
 
-| Output                                      | Location                              |
-|---------------------------------------------|---------------------------------------|
-| Cleaned dataset CSV                         | `data/processed/`                     |
-| EDA visualizations                          | `results/plots/`                      |
-| Model comparison table                      | `results/model_comparison.csv`        |
-| Actual vs Predicted plots                   | `results/plots/`                      |
-| Forecast results for Game Theory            | `results/ml_forecast_for_game_theory.csv` |
-| Trained ML model                            | `models/best_model.pkl`               |
-
----
-
-## Research Team
-
-University Group Research Project  
-Topic: AI-ML Assisted Game-Theoretic Framework for Sustainable Energy Optimization  
-Data: Grid-India hourly electricity data (January 2024 – June 2025)
-
----
-
-## Important Notes
-
-- **Do NOT modify files in `data/raw/`** — the notebook works from the original Excel file.
-- The notebook handles **missing data, outliers, and time-series gaps** automatically.
-- If the Excel file is not found, the notebook will display a clear error message with instructions.
-- Synthetic data is used **only** for Game Theory simulation parameters (pricing/consumer response), and this is explicitly labeled in the notebook.
+- **Dataset:** Grid-India (2024). *Electricity Demand, Solar and Wind Generation Data of India at Hourly Interval*. Mendeley Data, V2. [https://doi.org/10.17632/y58jknpgs8.2](https://doi.org/10.17632/y58jknpgs8.2)
+- **Meteorological Data:** NASA Langley Research Center POWER Project. [https://power.larc.nasa.gov/](https://power.larc.nasa.gov/)
