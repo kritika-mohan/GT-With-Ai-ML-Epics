@@ -89,11 +89,10 @@ cd GT-With-Ai-ML-Epics
 
 ### 2. Install Dependencies
 ```bash
-pip install pandas numpy matplotlib seaborn scikit-learn xgboost lightgbm joblib openpyxl streamlit plotly nbformat nbclient
+pip install -r requirements.txt
 ```
 
-### 3. Launch the Interactive Dashboard
-To interact with the live model, test real-time inference, and run the game-theoretic simulator:
+### 3. Launch the Interactive Dashboard Locally
 ```bash
 streamlit run dashboard/app.py
 ```
@@ -107,6 +106,36 @@ Or execute headlessly from the terminal:
 ```bash
 python notebooks/run_notebook.py
 ```
+
+---
+
+## ☁️ Deploying to Render (Render.com)
+
+This repository is pre-configured for **1-click / zero-config deployment on Render** as a Free Web Service.
+
+### Option A: Automatic Blueprint Deploy (Recommended)
+1. Go to [Render Dashboard](https://dashboard.render.com/) and click **New +** → **Blueprint**.
+2. Connect your GitHub repository `kritika-mohan/GT-With-Ai-ML-Epics`.
+3. Render will automatically detect [`render.yaml`](render.yaml) and configure the build and start commands.
+4. Click **Apply** to deploy.
+
+### Option B: Manual Web Service Setup
+1. On Render, click **New +** → **Web Service**.
+2. Select your repository: `kritika-mohan/GT-With-Ai-ML-Epics`.
+3. Fill in the deployment settings:
+   - **Name:** `energy-optimization-dashboard`
+   - **Language / Environment:** `Python 3`
+   - **Region:** Any (e.g. `Oregon (US West)`)
+   - **Branch:** `main`
+   - **Build Command:**
+     ```bash
+     pip install --upgrade pip && pip install -r requirements.txt
+     ```
+   - **Start Command:**
+     ```bash
+     streamlit run dashboard/app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+     ```
+4. Click **Create Web Service**. Render will install dependencies, load the serialized model (`models/best_model.pkl`), and host the live interactive dashboard on a public `onrender.com` URL.
 
 ---
 
